@@ -4,6 +4,9 @@ import com.hql.demo.entity.Employee;
 import com.hql.demo.util.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
+
+import java.util.List;
 
 public class App {
     public static void main(String[] args) {
@@ -11,6 +14,7 @@ public class App {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 
             createEmployee(session);
+//            getEmployee(session);
 //            getEmployeebyId(session);
 //            updateEmployeeById(session);
 //            deleteEmployeeById(session);
@@ -30,6 +34,24 @@ public class App {
         Integer id = (Integer) session.save(employee);
         System.out.println("Employee is created  with Id::" + id);
         session.getTransaction().commit();
+    }
+
+    private static void getEmployee(Session session) {
+        String hql = "FROM Employee";
+        Query query = session.createQuery(hql);
+        final List<Employee> result = (List<Employee>) query.list();
+        for (final Employee employee : result) {
+            System.out.println(employee.toString());
+        }
+    }
+
+    private static void getEmployeebyId(Session session) {
+        Employee employee = session.get(Employee.class, 6);
+        if (employee != null) {
+            System.out.println(employee.getName());
+        } else {
+            System.out.println("Employee doesn't exist with provideded Id..");
+        }
     }
 
     private static void deleteEmployeeById(Session session) {
@@ -53,15 +75,6 @@ public class App {
 
             session.update(employee);
             session.getTransaction().commit();
-        } else {
-            System.out.println("Employee doesn't exist with provideded Id..");
-        }
-    }
-
-    private static void getEmployeebyId(Session session) {
-        Employee employee = session.get(Employee.class, 6);
-        if (employee != null) {
-            System.out.println(employee.getName());
         } else {
             System.out.println("Employee doesn't exist with provideded Id..");
         }
