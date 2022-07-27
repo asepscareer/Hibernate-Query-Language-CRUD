@@ -13,6 +13,8 @@ public class App {
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 
+            // Try in Order
+
             createEmployee(session);
 //            getEmployee(session);
 //            getEmployeebyId(session);
